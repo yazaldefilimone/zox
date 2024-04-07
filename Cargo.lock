@@ -3,6 +3,24 @@
 version = 3
 
 [[package]]
+name = "javascriptcore"
+version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30af391072019dd891fa383080177e8994390a48a4c9e782cee1747964276ebb"
+dependencies = [
+ "javascriptcore-sys",
+]
+
+[[package]]
+name = "javascriptcore-sys"
+version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2dd50b48d2a6367265a3ed474dd1d388c37d4226feabc67a807d3559de15a0df"
+dependencies = [
+ "pkg-config",
+]
+
+[[package]]
 name = "pkg-config"
 version = "0.3.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -30,7 +48,9 @@ dependencies = [
 name = "runtime"
 version = "0.1.0"
 dependencies = [
+ "javascriptcore",
  "rusty_jsc",
+ "rusty_jsc_macros",
 ]
 
 [[package]]
