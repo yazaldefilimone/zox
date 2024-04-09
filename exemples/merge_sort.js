@@ -27,4 +27,4 @@ let test = [5, 3, 8, 4, 2, 1, 9, 7, 6];
 let result = mergeSort(test);
 
 // first number 
-console.log(result[0]);
+console.log(result);
