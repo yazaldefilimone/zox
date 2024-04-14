@@ -7,4 +7,9 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
-rquickjs = { version = "0.5.1", features = ["macro"] }
+rquickjs = { version = "0.5.1", features = ["macro",  "exports"] }
+serde_json = "1.0.115"
+swc = "0.273.24"
+swc_common = {version = "0.33.22", features = ["tty-emitter"] }
+swc_ecmascript = "0.239.21"
+log = "0.4"
