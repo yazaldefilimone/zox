@@ -7,5 +7,4 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
-rusty_jsc = "0.1.0"
-rusty_jsc_macros = "0.1.0"
+rquickjs = { version = "0.5.1", features = ["macro"] }
