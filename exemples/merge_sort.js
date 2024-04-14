@@ -28,3 +28,5 @@ let result = mergeSort(test);
 
 // first number 
 console.log(result);
+
+console.log({ a: 1, b: 2 });
