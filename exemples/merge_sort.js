@@ -29,4 +29,8 @@ let result = mergeSort(test);
 // first number 
 console.log(result);
 
-console.log({ a: 1, b: 2 });
+
+console.log([{ a: 1, b: 2 }, 10, "hllo", (a, b) => a + b]);
+console.log(2004)
+console.log("hello, zox!");
+
