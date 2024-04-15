@@ -1,42 +1,86 @@
-use crate::utils::get_transpiler_options;
-use std::sync::Arc;
-use swc::config::Config;
-use swc::Compiler;
-use swc_common::errors::{ColorConfig, Handler};
+use std::io;
 
-use swc_common::{FileName, SourceMap};
-pub struct Transpiler {
-  pub source_map: Arc<SourceMap>,
-  swc_compiler: Compiler,
+use swc::{config::IsModule, Compiler, PrintArgs};
+use swc_common::{errors::Handler, source_map::SourceMap, sync::Lrc, Mark, GLOBALS};
+use swc_ecma_ast::EsVersion;
+use swc_ecma_parser::Syntax;
+use swc_ecma_transforms_typescript::strip;
+use swc_ecma_visit::FoldWith;
+
+// todo: consider help Boshen to build oxc transform in https://github.com/oxc-project/oxc/discussions/2704
+// todo: or build my own transform  based on DOD (https://www.dataorienteddesign.com)
+pub fn transform(filename: &str, ts_code: &str) -> String {
+  // https://github.com/swc-project/swc/blob/875a7a7393c23774453e89549e92ac412ddc2e9a/crates/swc_ecma_transforms_typescript/examples/ts_to_js.rs
+  let cm = Lrc::new(SourceMap::new(swc_common::FilePathMapping::empty()));
+
+  let compiler = Compiler::new(cm.clone());
+
+  let source = cm.new_source_file(swc_common::FileName::Custom(filename.into()), ts_code.to_string());
+
+  let handler = Handler::with_emitter_writer(Box::new(io::stderr()), Some(compiler.cm.clone()));
+
+  return GLOBALS.set(&Default::default(), || {
+    let program = compiler
+      .parse_js(
+        source,
+        &handler,
+        EsVersion::Es5,
+        Syntax::Typescript(Default::default()),
+        IsModule::Bool(false),
+        Some(compiler.comments()),
+      )
+      .expect("parse_js failed");
+
+    // Add TypeScript type stripping transform
+    let top_level_mark = Mark::new();
+    let program = program.fold_with(&mut strip(top_level_mark));
+
+    // https://rustdoc.swc.rs/swc/struct.Compiler.html#method.print
+    let ret = compiler
+      .print(
+        &program, // ast to print
+        PrintArgs::default(),
+      )
+      .expect("print failed");
+
+    return ret.code;
+  });
 }
 
-pub struct TranspilerOptions {}
+// Transforms typescript to javascript. Returns tuple (js string, source map)
+// pub(crate) fn ts_to_js(filename: &str, ts_code: &str) -> (String, String) {
+//   let cm = Lrc::new(SourceMap::new(swc_common::FilePathMapping::empty()));
 
-impl Transpiler {
-  pub fn new() -> Self {
-    let source_map = Arc::new(SourceMap::default());
-    let swc_compiler = Compiler::new(source_map.clone());
+//   let compiler = Compiler::new(cm.clone());
 
-    Self { source_map, swc_compiler }
-  }
+//   let source = cm.new_source_file(swc_common::FileName::Custom(filename.into()), ts_code.to_string());
 
-  pub fn transpile(&self, code: String, filename: String, is_module: bool) -> Result<String, String> {
-    let globals = swc_common::Globals::new();
-    swc_common::GLOBALS.set(&globals, || {
-      let options_str = get_transpiler_options(is_module);
-      let config: Config = serde_json::from_str(&options_str).unwrap();
+//   let handler = Handler::with_emitter_writer(Box::new(io::stderr()), Some(compiler.cm.clone()));
 
-      let format_source_map = self
-        .source_map
-        .new_source_file(FileName::Custom(filename.into()), code.into());
-      let handler = Handler::with_tty_emitter(ColorConfig::Auto, true, false, Some(self.source_map.clone()));
-      let options = swc::config::Options { config, ..Default::default() };
+//   return GLOBALS.set(&Default::default(), || {
+//     let program = compiler
+//       .parse_js(
+//         source,
+//         &handler,
+//         EsVersion::Es5,
+//         Syntax::Typescript(Default::default()),
+//         IsModule::Bool(false),
+//         Some(compiler.comments()),
+//       )
+//       .expect("parse_js failed");
 
-      let output = self.swc_compiler.process_js_file(format_source_map, &handler, &options);
-      match output {
-        Ok(output) => Ok(output.code),
-        Err(error) => Err(error.to_string()),
-      }
-    })
-  }
-}
+//     // Add TypeScript type stripping transform
+//     let top_level_mark = Mark::new();
+//     let program = program.fold_with(&mut strip(top_level_mark));
+
+//     // https://rustdoc.swc.rs/swc/struct.Compiler.html#method.print
+//     let ret = compiler
+//       .print(
+//         &program, // ast to print
+//         PrintArgs::default(),
+//       )
+//       .expect("print failed");
+
+//     return (ret.code, ret.map.expect("no source map"));
+//   });
+// }
