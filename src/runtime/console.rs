@@ -1,7 +1,5 @@
 use crate::bindings::print_value;
 use rquickjs::{class::Trace, methods, Ctx, Value};
-use rquickjs::{qjs, FromJs};
-use std::fmt::Debug;
 #[derive(Trace)]
 #[rquickjs::class(rename_all = "camelCase")]
 pub struct Console<'js> {
