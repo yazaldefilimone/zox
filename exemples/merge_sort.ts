@@ -27,3 +27,8 @@ const _merge = (left: number[], right: number[]): number[] => {
 
   return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
 };
+
+
+let a_lof_numbers: number[] = [5, 3, 7, 1, 8, 2, 9, 4, 6,0, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+console.log(merge_sort(a_lof_numbers)); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
