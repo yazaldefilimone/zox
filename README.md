@@ -1,6 +1,12 @@
 <samp>
 
-zox is 2x faster than [bun](https://bun.sh/) in single-threaded mode, I currently don't have a multi-threaded benchmark for zox, because I'm still working on the multi-threaded part of zox.
+Zox is 2x faster than [Bun](https://bun.sh/)in single-thread. I'm still working to make it multi-thread.
 
 
-The project is not that big thing, so I won't describe much about it!
+
+The project isn't really a big deal, so I won't say much about it!
+
+
+
+
+
