@@ -1,6 +1,6 @@
 <samp>
 
-Zox is 2x faster than [Bun](https://bun.sh/)in single-thread. I'm still working to make it multi-thread.
+Zox is 2x faster than [Bun](https://bun.sh/) in single-thread. I'm still working to make it multi-thread.
 
 
 
