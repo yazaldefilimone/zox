@@ -1,7 +1,4 @@
 <samp>
-
-- 04/2024:  Zox is 2x faster than [Bun](https://bun.sh/) in single-thread. I'm still working to make it multi-thread.
-
 > At the moment, Zox depends on extremely large external libs and they are not the best in my view, but my current focus is to make Zox work and then I will optimize and do things my way, ex [swc](https://swc.rs/).
 
 - [ ] Low-Level Bindings
@@ -55,6 +52,10 @@
   - [ ] Finish "buffer" implementation
   - [ ] require implementation that natively supports ESM (rather than via transpiler). This would involve subclassing AbstractModuleRecord in  - [ ] JSC. This would better support lazy-loading CommonJS modules.
 
+
+#### Chang Log
+- 04/2024
+ - Zox is 2x faster than [Bun](https://bun.sh/) in single-thread. I'm still working to make it multi-thread.
 
 
 
