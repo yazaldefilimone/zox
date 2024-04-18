@@ -24,9 +24,9 @@ pub fn transform(filename: &str, ts_code: &str) -> String {
       .parse_js(
         source,
         &handler,
-        EsVersion::Es5,
+        EsVersion::Es2022, // suport only ecmascript 2020
         Syntax::Typescript(Default::default()),
-        IsModule::Bool(false),
+        IsModule::Bool(true),
         Some(compiler.comments()),
       )
       .expect("parse_js failed");
@@ -36,14 +36,18 @@ pub fn transform(filename: &str, ts_code: &str) -> String {
     let program = program.fold_with(&mut strip(top_level_mark));
 
     // https://rustdoc.swc.rs/swc/struct.Compiler.html#method.print
-    let ret = compiler
-      .print(
-        &program, // ast to print
-        PrintArgs::default(),
-      )
-      .expect("print failed");
-
-    return ret.code;
+    let ret = compiler.print(
+      &program, // ast to print
+      PrintArgs::default(),
+    );
+    match ret {
+      Ok(ret) => {
+        return ret.code;
+      }
+      Err(err) => {
+        panic!("error transpiler {}: {}", filename, err);
+      }
+    }
   });
 }
 

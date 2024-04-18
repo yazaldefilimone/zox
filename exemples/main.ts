@@ -1,5 +1,5 @@
-const a: number = 10;
-const b: number = 20;
+let a: number = 10;
+let b: number = 20;
 
 
 let r = a + b;
